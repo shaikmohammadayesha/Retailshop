@@ -36,7 +36,7 @@ class Main {
         while (noOfCustomers > 0) {
             //noOfProductsPurchased -> no of products customer bought.Allows duplicates.
             int noOfProductsPurchased = scanner.nextInt();
-            //same as above to read the nextLine character.
+
             scanner.nextLine();
             //for each customer setting the maxPrice to the minimum integer value.
             int maxPrice = Integer.MIN_VALUE;
@@ -46,27 +46,35 @@ class Main {
                 if (custDetails.length == 2) {
                     String name = custDetails[0].toLowerCase();
                     int noOfUnits = Integer.parseInt(custDetails[1]);
-//check for each productinfo that matches with customers purchase and stores in the Details the quantity purchased
-                    if (products.contains(name)) {
+//check for each productinfo that matches with customers purchase and stores in the Details the quantity purchased.
                         for (ProductInfo eachProduct : products) {
                             if (eachProduct.name.equals(name)) {
 
                                 if (detailsOfProductCustomerPurchased.containsKey(eachProduct)) {
                                     detailsOfProductCustomerPurchased.put(eachProduct, detailsOfProductCustomerPurchased.get(eachProduct) + noOfUnits);
-                                } else {
+                                }
+                                else {
                                     detailsOfProductCustomerPurchased.put(eachProduct, noOfUnits);
                                 }
-
+                                int price = detailsOfProductCustomerPurchased.get(eachProduct) * eachProduct.unitPrice;
+                                if(maxPrice < price){
+                                 maxPrice = price;
+                                }
                                 break;
                             }
+
                         }
-                    }
+
+
                 }
+                else{
+                    System.out.println("Please Enter in the format 'NAME-OF-THE-PRDOCUT, NO-OF-UNITS'");
+                }
+                noOfProductsPurchased--;
             }
                 isDiscntAvail = detailsOfProductCustomerPurchased.size() >= 2;
                 CustomerService.billing(detailsOfProductCustomerPurchased, isDiscntAvail, taxCategory, maxPrice);
-                CustomerService.billing();
-                CustomerService.resetValues();
+                detailsOfProductCustomerPurchased.clear();
                 noOfCustomers--;
         }//end of all the customers.
             scanner.close();
