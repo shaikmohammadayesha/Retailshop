@@ -37,10 +37,6 @@ class CustomerService {
             totalPrice += price;
         }
         System.out.printf("Total price %.2f, total gst %.2f final price %.2f\n", totalPrice, totalGst, totalPrice + totalGst);
-    }
-
-    //setting the values of total price and total gst back to 0.
-    static void resetValues() {
         totalPrice = 0.0;
         totalGst = 0.0;
     }
