@@ -1,6 +1,9 @@
 import java.util.HashMap;
-class CustomerService {
+
+class CustomerService{
+
     static String name;
+
     static int tax;
     static int unitPrice;
     static double price;
@@ -10,7 +13,9 @@ class CustomerService {
     static double totalGst = 0.0;
 
 //Billing method is to give the individual price of the porduct and total price of the purchase.
-    static void billing(HashMap<ProductInfo, Integer> detailsOfProductsCustomerPurchased, boolean isDiscountAvailable, int[] taxCat, int maxPrice) {
+    static boolean billing(HashMap<ProductInfo, Integer> detailsOfProductsCustomerPurchased, boolean isDiscountAvailable, int[] taxCat, int maxPrice,  boolean isNextDiscountAvailable) {
+        totalPrice = 0.0;
+        totalGst = 0.0;
         //going throught each product purchased by the customer stored inthe details
         for (HashMap.Entry<ProductInfo, Integer> detail : detailsOfProductsCustomerPurchased.entrySet()) {
             name = detail.getKey().name;
@@ -32,13 +37,18 @@ class CustomerService {
                 gst = (price * tax) / 100;
                 System.out.println(name + " - total unit " + noOfUnits + " - price  " + price + " gst " + gst + " total " + (price+gst));
             }
-
             totalGst += gst;
             totalPrice += price;
         }
-        System.out.printf("Total price %.2f, total gst %.2f final price %.2f\n", totalPrice, totalGst, totalPrice + totalGst);
-        totalPrice = 0.0;
-        totalGst = 0.0;
+
+        if(isNextDiscountAvailable){
+            System.out.printf("Total price %.2f, total gst %.2f final price %.2f - 50 = %.2f\n", totalPrice, totalGst, totalPrice + totalGst, totalPrice+totalGst-50);
+        }
+        else {
+            System.out.printf("Total price %.2f, total gst %.2f final price %.2f\n", totalPrice, totalGst, totalPrice + totalGst);
+        }
+
+        return totalPrice+totalGst >= 1000;
     }
 
 

@@ -32,9 +32,17 @@ class Main {
         boolean isDiscntAvail;
         //Details - Contails all the ProductInfo as key and no of units the customer pursed.
         HashMap<ProductInfo, Integer> detailsOfProductCustomerPurchased = new HashMap<>();
+        HashSet<Customer> customerDetails = new HashSet<>();
+
         //reading each customer purchase
         while (noOfCustomers > 0) {
             //noOfProductsPurchased -> no of products customer bought.Allows duplicates.
+            String customerId = scanner.next();
+            scanner.nextLine();
+            if(customerDetails.stream().noneMatch(customer -> customer.getCustomerId().equals(customerId))){
+                customerDetails.add(new Customer(customerId, false));
+            }
+
             int noOfProductsPurchased = scanner.nextInt();
 
             scanner.nextLine();
@@ -42,11 +50,12 @@ class Main {
             int maxPrice = Integer.MIN_VALUE;
             //reading  each product, customer purchased
             while (noOfProductsPurchased > 0) {
-                String[] custDetails = scanner.nextLine().split(",\\s*");
-                if (custDetails.length == 2) {
-                    String name = custDetails[0].toLowerCase();
-                    int noOfUnits = Integer.parseInt(custDetails[1]);
-//check for each productinfo that matches with customers purchase and stores in the Details the quantity purchased.
+                String[] custPurchaseDetails = scanner.nextLine().split(",\\s*");
+                if (custPurchaseDetails.length == 2) {
+                    String name = custPurchaseDetails[0].toLowerCase();
+                    int noOfUnits = Integer.parseInt(custPurchaseDetails[1]);
+//check for each productinfo that matches with customers purchase and stores in the Details the quantity purchased
+
                         for (ProductInfo eachProduct : products) {
                             if (eachProduct.name.equals(name)) {
 
@@ -73,8 +82,12 @@ class Main {
                 noOfProductsPurchased--;
             }
                 isDiscntAvail = detailsOfProductCustomerPurchased.size() >= 2;
-                CustomerService.billing(detailsOfProductCustomerPurchased, isDiscntAvail, taxCategory, maxPrice);
+                Optional<Boolean> searchForNextDiscountAvailable = customerDetails.stream().filter(customer -> customer.getCustomerId().equals(customerId)).map(Customer::getisNextDiscountAvailable).findFirst();
+                boolean isNextDiscountAvailable = searchForNextDiscountAvailable.orElse(false);
+                isNextDiscountAvailable = CustomerService.billing(detailsOfProductCustomerPurchased, isDiscntAvail, taxCategory, maxPrice, isNextDiscountAvailable);
+                customerDetails.add(new Customer(customerId, isNextDiscountAvailable));
                 detailsOfProductCustomerPurchased.clear();
+
                 noOfCustomers--;
         }//end of all the customers.
             scanner.close();
