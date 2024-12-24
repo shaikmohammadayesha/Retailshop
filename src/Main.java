@@ -77,6 +77,7 @@ class Main {
                     int noOfUnits = Integer.parseInt(custPurchaseDetails[1]);
 //check for each productinfo that matches with customers purchase and stores in the Details the quantity purchased
 
+
                     for (ProductInfo eachProduct : products) {
                         if (eachProduct.name.equals(name) && eachProduct.unitsAvailable >= noOfUnits) {
                             //check if the customer is asking for the same product. if yes then add the units to the old one no of units purchased.

@@ -12,5 +12,4 @@ class ProductInfo {
         this.unitPrice = price;
         this.unitsAvailable = unitsAvailable;
     }
-
 }
